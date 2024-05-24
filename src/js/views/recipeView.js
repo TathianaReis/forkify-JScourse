@@ -1,45 +1,53 @@
 import View from './View.js';
 //import icons from '../img/icons.svg' //Parcel 1
-import icons from 'url:../../img/icons.svg' // Parcel 2 //Este path e' relativo ao controler.js location
-import {Fraction} from 'fractional';
+import icons from 'url:../../img/icons.svg'; // Parcel 2 //Este path e' relativo ao controler.js location
+//import {Fraction} from 'fractional';
 
 //console.log(icons);
-console.log({Fraction});
+//console.log({Fraction});
 
-class RecipeView extends View{ //Tudo que esta' la' dentro do View estava aqui antes.  
-    _parentElement = document.querySelector('.recipe');    
-    //The above 2 properties are something that all the views will have in common
-    _errorMessage = 'We could not find that recipe. Please try another one.'
-    _message = '';
+/* NOTE: The Fractional package has been reported to cause an error when deployed to a server. I suggest you to use Fracty instead. */
+// import { Fraction } from 'fractional';
+import fracty from 'fracty';
 
-    addHandlerRender(handler){
-        ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
-        //This is not a private Method because it needs to be part of the public API of this object. 
-    }
+class RecipeView extends View {
+  //Tudo que esta' la' dentro do View estava aqui antes.
+  _parentElement = document.querySelector('.recipe');
+  //The above 2 properties are something that all the views will have in common
+  _errorMessage = 'We could not find that recipe. Please try another one.';
+  _message = '';
 
-    addHandlerUpdateServings(handdler){
-        this._parentElement.addEventListener('click', function(e){
-            const btn = e.target.closest('.btn--update-servings');
-            if(!btn) return;
-            console.log(btn);
-            //const updateTo = btn.dataset.updateTo;
-            const updateTo = +btn.dataset.updateTo;
-            if (updateTo > 0) handdler(updateTo); //HOw we determine the new Servings in this function? Here we will need to connect the user interface with the code. For that we use the special data properties - See buttons - +  
-        })
-    }
+  addHandlerRender(handler) {
+    ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
+    //This is not a private Method because it needs to be part of the public API of this object.
+  }
 
-    addHandlerAddBookmark(handdler){
-        this._parentElement.addEventListener('click', function(e){
-            const btn = e.target.closest('.btn--bookmark');
-            if(!btn) return;
-            handdler();
-        });
-    }
+  addHandlerUpdateServings(handdler) {
+    this._parentElement.addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn--update-servings');
+      if (!btn) return;
+      console.log(btn);
+      //const updateTo = btn.dataset.updateTo;
+      const updateTo = +btn.dataset.updateTo;
+      if (updateTo > 0) handdler(updateTo); //HOw we determine the new Servings in this function? Here we will need to connect the user interface with the code. For that we use the special data properties - See buttons - +
+    });
+  }
 
-    _generateMarkup(){ //All the child Views should have this method because in the View the render Method relies on that!
-        return `
+  addHandlerAddBookmark(handdler) {
+    this._parentElement.addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn--bookmark');
+      if (!btn) return;
+      handdler();
+    });
+  }
+
+  _generateMarkup() {
+    //All the child Views should have this method because in the View the render Method relies on that!
+    return `
                 <figure class="recipe__fig">
-                <img src="${this._data.image}" alt=">${this._data.title}" class="recipe__img" />
+                <img src="${this._data.image}" alt=">${
+      this._data.title
+    }" class="recipe__img" />
                 <h1 class="recipe__title">
                 <span>${this._data.title}</span>
                 </h1>
@@ -50,23 +58,31 @@ class RecipeView extends View{ //Tudo que esta' la' dentro do View estava aqui a
                 <svg class="recipe__info-icon">
                     <use href="${icons}.svg#icon-clock"></use>
                 </svg>
-                <span class="recipe__info-data recipe__info-data--minutes">${this._data.cookingTime}</span>
+                <span class="recipe__info-data recipe__info-data--minutes">${
+                  this._data.cookingTime
+                }</span>
                 <span class="recipe__info-text">minutes</span>
                 </div>
                 <div class="recipe__info">
                 <svg class="recipe__info-icon">
                     <use href="${icons}.svg#icon-users"></use>
                 </svg>
-                <span class="recipe__info-data recipe__info-data--people">${this._data.servings}</span>
+                <span class="recipe__info-data recipe__info-data--people">${
+                  this._data.servings
+                }</span>
                 <span class="recipe__info-text">servings</span>
             
                 <div class="recipe__info-buttons">
-                    <button class="btn--tiny btn--update-servings" data-update-to="${this._data.servings - 1}">
+                    <button class="btn--tiny btn--update-servings" data-update-to="${
+                      this._data.servings - 1
+                    }">
                     <svg>
                         <use href="${icons}.svg#icon-minus-circle"></use>
                     </svg>
                     </button>
-                    <button class="btn--tiny btn--update-servings" data-update-to="${this._data.servings + 1}">
+                    <button class="btn--tiny btn--update-servings" data-update-to="${
+                      this._data.servings + 1
+                    }">
                     <svg>
                         <use href="${icons}.svg#icon-plus-circle"></use>
                     </svg>
@@ -74,14 +90,18 @@ class RecipeView extends View{ //Tudo que esta' la' dentro do View estava aqui a
                 </div>
                 </div>
             
-                <div class="recipe__user-generated ${this._data.key ? '' : 'hidden'}">
+                <div class="recipe__user-generated ${
+                  this._data.key ? '' : 'hidden'
+                }">
                 <svg>
                   <use href="${icons}#icon-user"></use>
                 </svg>
               </div>
                 <button class="btn--round btn--bookmark">
                 <svg class="">
-                    <use href="${icons}.svg#icon-bookmark${this._data.bookmarked ? '-fill' : ''}"></use>
+                    <use href="${icons}.svg#icon-bookmark${
+      this._data.bookmarked ? '-fill' : ''
+    }"></use>
                 </svg>
                 </button>
             </div>
@@ -89,7 +109,9 @@ class RecipeView extends View{ //Tudo que esta' la' dentro do View estava aqui a
             <div class="recipe__ingredients">
                 <h2 class="heading--2">Recipe ingredients</h2>
                 <ul class="recipe__ingredient-list">            
-                    ${this._data.ingredients.map(this._generatMarkupIngredient).join('')}                      
+                    ${this._data.ingredients
+                      .map(this._generatMarkupIngredient)
+                      .join('')}                      
                 </ul>
             </div>
             
@@ -97,7 +119,9 @@ class RecipeView extends View{ //Tudo que esta' la' dentro do View estava aqui a
                 <h2 class="heading--2">How to cook it</h2>
                 <p class="recipe__directions-text">
                 This recipe was carefully designed and tested by
-                <span class="recipe__publisher">${this._data.publisher}</span>. Please check out
+                <span class="recipe__publisher">${
+                  this._data.publisher
+                }</span>. Please check out
                 directions at their website.
                 </p>
                 <a
@@ -112,25 +136,26 @@ class RecipeView extends View{ //Tudo que esta' la' dentro do View estava aqui a
                 </a>
             </div>        
         `;
-       
-        //console.log(markup);
-        
-    }
 
-    _generatMarkupIngredient(ing){        
-        return `
+    //console.log(markup);
+  }
+
+  _generatMarkupIngredient(ing) {
+    return `
                 <li class="recipe__ingredient">
                 <svg class="recipe__icon">
                     <use href="${icons}.svg#icon-check"></use>
                 </svg>
-                <div class="recipe__quantity">${ing.quantity ? new Fraction(ing.quantity).toString() : ''}</div>
+                <div class="recipe__quantity">${
+                  ing.quantity ? fracty(ing.quantity).toString() : ''
+                }</div>
                 <div class="recipe__description">
                     <span class="recipe__unit">${ing.unit}</span>
                     ${ing.description}
                 </div>
             </li>
-        ` ;     
-    }
+        `;
+  }
 }
 
 //We could export the entire class like: export class RecipeView, but then we would have to import that class and create a new object out of that class (create a new RecipeView object)
